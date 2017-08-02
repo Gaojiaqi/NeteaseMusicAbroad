@@ -31,6 +31,8 @@
 在每次打开网易云音乐之前：<br/>
 进入文件夹，双击NeteaseMusicHelper即可。等待提示信息成功之后可以关掉它，然后一片清净，开心听歌，不用善后。<br/>
 
+默认使用wifi，如果使用有线网或其他方式，请将[run_me.sh](https://github.com/Gaojiaqi/NeteaseMusicAbroad/blob/master/run_me.sh#L12)第12行的wi-fi改成相应的名称。可以用networksetup -listallnetworkservices指令查看<br/>
+
 ### 测试环境
 
 macOS 10.12，NeteaseMusic Version 1.5.6，python 2.7.10，年费会员。未测试任何其他情况，欢迎测试报bug谢谢。
