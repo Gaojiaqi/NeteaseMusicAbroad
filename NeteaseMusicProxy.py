@@ -53,6 +53,16 @@ class MainlandProxy():
 		self.failed_times = 0
 		self.set_proxy()
 
+	def get_attr(self, tr):
+		trq = PyQuery(tr)
+		tds = trq.children()
+		bar = tds.eq(3).children()
+		css = bar.children().attr("style")
+		ip = tds.eq(0).text()
+		port = int(tds.eq(1).text())
+		speed = int(css.split(";")[0].strip().split(' ')[1][:-1])
+		return ip, port, speed
+
 	def set_proxy(self):
 		r = requests.get("http://cn-proxy.com/")
 		q = PyQuery(r.content)
@@ -61,13 +71,12 @@ class MainlandProxy():
 			self.ip = self.default_ip
 			self.port = self.default_port
 			return
-		tr = trs[min(self.failed_times,len(trs)-1)]
-		trq = PyQuery(tr)
-		tds = trq.children()
-		ip = tds.eq(0).text()
-		port = int(tds.eq(1).text())
+		lists = [self.get_attr(tr) for tr in trs]
+		lists = sorted(lists, key=lambda x: x[2], reverse=True)
+		ip, port, speed = lists[min(self.failed_times,len(lists)-1)]
 		self.ip = ip
 		self.port = port
+		print("using ip %s and port %d, speed is %d" % (self.ip, self.port, speed))
 
 	def change(self):
 		self.failed_times += 1
@@ -78,7 +87,7 @@ class MainlandProxy():
 			self.port = self.default_port
 		else:
 			self.set_proxy()
-		print("using ip %s and port %d" % (self.ip, self.port))
+		#print("using ip %s and port %d" % (self.ip, self.port))
 
 
 class NeteaseMusicProxyClient(proxy.ProxyClient):
